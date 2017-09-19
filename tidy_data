@@ -1,0 +1,66 @@
+require("data.table")
+require("reshape2")
+require(plyr)
+
+setwd("C:/Users/Manuel/Desktop/Coursera/GettingCleaningData_PeerReviewProject/UCI HAR Dataset/")
+
+#Loading the information
+activityLabels <- read.table("./activity_labels.txt")[,2]
+
+
+features <- read.table("./features.txt")[,2]
+
+extract_features <- grepl("means|std", features)
+
+#Loading and merging test data
+
+Xtest <- read.table("./test/X_test.txt")
+Ytest <- read.table ("./test/Y_test.txt")
+subjectTest <- read.table("./test/subject_test.txt")
+
+names(Xtest) = features
+
+Xtest = Xtest[,extract_features]
+
+#Loading Activity Labels
+Ytest[,2] = activityLabels[Ytest[,1]]
+names(Ytest) = c("Activity_ID", "Activity_Label")
+names(subjectTest) = "subject"
+
+test_data <- cbind(as.data.table(subjectTest), Ytest, Xtest)
+
+#Loading and extracting the training data
+XTrain <- read.table("./train/X_train.txt")
+YTrain <- read.table("./train/X_train.txt")
+subjectTrain <- read.table("./train/subject_train.txt")
+
+names(XTrain) = features
+
+XTrain = XTrain[,extract_features]
+
+#Solving for the YTrain
+YTrain[,2] = activityLabels[YTrain[,1]]
+names(YTrain)= c("ActivityID", "Activity_Label")
+names(subjectTest)= "subject"
+
+#Putting it together with cbind
+
+trainData <- cbind(as.data.table(subjectTrain), YTrain,XTrain)
+
+#Merging Both together(Test&Train Data)
+
+data = rbindlist(test_data, trainData)
+
+ID = c("subject", "Activity_ID", "Activity_Label")
+
+Labels_data = setdiff(colnames(data), ID)
+
+melt_data = melt (data , id = ID , measure.vars = Labels_data)
+
+#Making a new doc
+
+tidy_data = dcast(melt_data, subject + Activity_Label ~ variable, mean)
+
+write.table(tidy_data, file = "./tidy_data7.txt")
+
+
