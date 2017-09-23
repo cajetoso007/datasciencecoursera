@@ -1,0 +1,29 @@
+The analysis makes use of the data available in the following Files:
+'features_info.txt': Shows information about the variables used on the feature vector.
+
+'features.txt'
+
+'activity_labels.txt'
+
+'train/X_train.txt'
+
+'train/y_train.txt'
+
+'test/X_test.txt'
+
+'test/y_test.txt'
+
+THe "Goal" is described below:
+    The first method, extract_features, extracts the mean and stardard deviation in the dataset
+    THen the X&Y training sets with the X&Y test are stored in test_data and train_data
+    THe merged files for tain_data and test_data is called "data." 
+    Finally, the date is combined using melt, then added to create a file called tidy_data.txt
+    
+THe Run Analysis:
+    Add reshape2 and data.table libraries to the workspace to allow me to combine the data and store data as a data.table , instead of a data.frame.
+    Load  test and train data using the read.table methods
+    Load the features and activity labels.
+    Extract the mean and standard deviation column names and data using the extract_features method 
+    Combine the data. Process the data. Test and train data done individually then combined.
+    Merge data set.
+    Create a new tidy.txt file
